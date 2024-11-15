@@ -1,10 +1,8 @@
-from crypt import methods
-
 import bcrypt
+import jwt
+from flask import Flask, render_template, request, jsonify, make_response
 
 import jwt_try
-
-from flask import Flask, render_template, request, jsonify, make_response
 
 app = Flask(__name__)
 
@@ -47,10 +45,23 @@ def verify_password():
 def login():
     data = request.get_json()
     if data.username == 'admin' and data.password == 'admin':
-        token = jwt_try.create_jwt(data)
+        token = jwt_try.generate_token(data)
         return jsonify({"token": token})
     else:
         return jsonify({"message": "Invalid credentials"}), 401
+
+@app.route('/getuser', methods=['GET'])
+def getUser():
+    token = request.headers.get('authorization')
+    if not token:
+        return jsonify({"message": "token is missing"}), 401
+    try:
+        payload = jwt_try.verify_token(token)
+        return jsonify({"user": payload})
+    except jwt.ExpiredSignatureError:
+        return jsonify({"message": "token has expired"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"message": "Invalid token"}), 401
 
 if __name__ == '__main__':
     app.run(debug=True)
