@@ -47,7 +47,7 @@ def verify_password():
 def login():
     data = request.get_json()
     if data.username == 'admin' and data.password == 'admin':
-        token = jwt_try.encode_token(data)
+        token = jwt_try.create_jwt(data)
         return jsonify({"token": token})
     else:
         return jsonify({"message": "Invalid credentials"}), 401
