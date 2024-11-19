@@ -42,7 +42,7 @@ def verify_password():
 
 
 @app.route('/login', methods=['POST'])
-def login():
+def login_user():
     data = request.get_json()
     if data.username == 'admin' and data.password == 'admin':
         token = jwt_try.generate_token(data)
@@ -51,7 +51,7 @@ def login():
         return jsonify({"message": "Invalid credentials"}), 401
 
 @app.route('/getuser', methods=['GET'])
-def getUser():
+def get_user():
     token = request.headers.get('authorization')
     if not token:
         return jsonify({"message": "token is missing"}), 401

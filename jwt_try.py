@@ -1,10 +1,7 @@
-import datetime
+
 import os
 
 import jwt
-
-JWT_SECRET_KEY = "superjwtsecret"
-
 
 # Function to generate a JWT
 def generate_token(data):
@@ -12,8 +9,6 @@ def generate_token(data):
     payload = {
         "user_id": data.get("user_id"),
         "role": data.get("role"),
-        "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=30),  #
-        "iat": datetime.datetime.now(datetime.UTC),  # Issued at
         "sub": "authentication"
     }
 
@@ -27,7 +22,7 @@ data = {
     "role": "admin"
 }
 
-token = create_jwt(data)
+token = generate_token(data)
 print(token)
 
 
